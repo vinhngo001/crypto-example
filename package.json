@@ -1,0 +1,23 @@
+{
+    "name": "blockchain-example",
+    "version": "1.0.0",
+    "description": "blockchain-example with nodejs",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index",
+        "dev": "nodemon index",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "blockchain",
+        "nodejs"
+    ],
+    "author": "Vinh Ngo",
+    "license": "ISC",
+    "dependencies": {
+        "crypto-js": "^4.1.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.20"
+    }
+}
