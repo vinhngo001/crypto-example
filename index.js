@@ -15,4 +15,4 @@ const block = new Block(prevHash='', data={
     hello: 'Coders Tokyo'
 });
 
-console.log(block)
+console.log(block);
