@@ -43,4 +43,4 @@ function decryptedData(data, base64) {
     return decryptedData;
 }
 
-// console.log(decryptedData("fa6cb95e740320e40fa42a4d09ec4658", "tC1QSTNQlc63xjRxRmMotw=="))
+// console.log(decryptedData("0c05bec93a72df01d877f80c61cbb44c", "Tu0yxvF0C64ofj/76XRv3w=="))
