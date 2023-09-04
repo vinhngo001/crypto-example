@@ -1,7 +1,8 @@
 const crypto = require('crypto');
 const fs = require("fs");
+const { encreptedDes, decryptDes } = require('./des');
 
-const keyToEncrypt = 'i want to live again, forever';
+const keyToEncrypt = 'zfmRZuMctQrhQ36lK2z47bm4';
 
 function generateKeys() {
     const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
@@ -49,23 +50,33 @@ const dataToEncrypt = {
     password: "123456"
 }
 
-function encreptedData(dataToEncrypt) {
-    // Convert the data object to a JSON string
-    const dataJsonString = JSON.stringify(dataToEncrypt);
+const result = encreptedDes(desKey, dataToEncrypt);
+// console.log({result});
 
-    // Convert the JSON string to a Buffer
-    const dataBuffer = Buffer.from(dataJsonString, 'utf-8');
-    // random 16 digit initialization vector
-    const iv = crypto.randomBytes(16);
-    // Create a DES cipher with the key
-    const cipher = crypto.createCipheriv('aes-256-cbc', desKey, iv);
+const encreptedData = result.encryptedData;
+const encryptionKey = result.encryptionKey;
+const base64 = result.base64
+const decryptData = decryptDes(encreptedData, encryptionKey, base64);
 
-    // Encrypt the data
-    const encryptedData = Buffer.concat([cipher.update(dataBuffer), cipher.final()]);
+console.log(">>>>>",decryptData ,"<<<<<");
 
-    console.log('Encrypted Data:', encryptedData.toString('hex'));
-}
+const dataToSign = decryptData;
 
-function decryptData(data, base64){
-    
+const sign = crypto.createSign('SHA256');
+sign.update(dataToSign);
+
+const signedData = sign.sign(lizaiPrivateKey, 'base64');
+console.log({signedData});
+
+const verify = crypto.createVerify('SHA256');
+verify.update(dataToSign);
+
+const isSignatureValid = verify.verify(lizaiPublicKey, signedData, 'base64');
+
+if (isSignatureValid) {
+    // Signature is valid
+    console.log({ message: 'Signature is valid' });
+} else {
+    // Signature is invalid
+    console.log({ message: 'Signature is invalid' });
 }
