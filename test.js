@@ -60,7 +60,7 @@ function verifySignature(dataToVerifyBase64String, signatureBase64String, public
 
 // Example usage
 // const dataToDecode = "YmxhYmxh";
-const dataToDecode =  ""
+const dataToDecode =  "eyJzdWNjZXNzIjpmYWxzZSwic3RhdHVzIjo0MDAsIm1lc3NhZ2UiOiJlcnJvciIsImVycm9yIjp7ImNvZGUiOiJjcmVkZW50aWFsc19yZXF1aXJlZCIsInN0YXR1cyI6NDAxLCJuYW1lIjoiVW5hdXRob3JpemVkRXJyb3IiLCJpbm5lciI6eyJtZXNzYWdlIjoiTm8gYXV0aG9yaXphdGlvbiB0b2tlbiB3YXMgZm91bmQifX0sImRhdGEiOm51bGx9"
 // const dataToSign = { "fromCreatedDate": 1672518456, "toCreatedDate": 1694057256 };
 const dataToSign = decodeBase64(dataToDecode);
 console.log({dataToSign});
