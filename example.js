@@ -1,38 +1,49 @@
-const { createWorker, createScheduler } = require('tesseract.js');
-const fetch = require('node-fetch');
-
+// const fetch = require('node-fetch');
+// const multer = require("multer");
+// const fs = require("fs");
+// const path = require("path");
+// const https = require('https');
+// const { createWorker, createScheduler, recognize } = require('tesseract.js');
+// const crypto = require("crypto");
+const tesseract = require('tesseract.js');
 // URL of the image you want to check
-const imageUrl = 'https://www.ncbi.nlm.nih.gov/corehtml/pmc/pmcgifs/bookshelf/thumbs/th-lactmed-lrg.png';
+const imageUrl = 'https://www.ncbi.nlm.nih.gov/corehtml/pmc/pmcgifs/bookshelf/thumbs/th-lactmed-lrg.png'; //https://tesseract.projectnaptha.com/img/eng_bw.png
+const imagePath = './Funny-Minion-Quotes.jpg';
+// const tesseract = require("node-tesseract-ocr");
 
-// Create a Tesseract worker
-const worker = createWorker();
-const scheduler = createScheduler();
+// const config = {
+// 	lang: "eng",
+// 	oem: 1,
+// 	psm: 3,
+// }
 
-(async () => {
-    (await worker).load();
-  (await worker).reinitialize('eng');
-  await scheduler.addWorker(worker);
+// tesseract
+//   .recognize(imageUrl, config)
+//   .then((text) => {
+//     console.log("Result:", text)
+//   })
+//   .catch((error) => {
+//     console.log(error.message)
+//   })
 
-  // Fetch the image from the URL
-  const response = await fetch(imageUrl);
-  const imageBuffer = await response.buffer();
+// const ReadText = require('text-from-image')
 
-  // Perform OCR on the image
-  await scheduler.addJob('recognize', { buffer: imageBuffer });
-  await scheduler.terminate();
+// ReadText(imageUrl).then(text => {
+//     console.log(text);
+// }).catch(err => {
+//     console.log(err);
+// })
 
-  // Get the result of OCR
-  const { data: { text } } = await worker.getOCRResults();
-
-  // Check if the recognized text contains any logo-related keywords
+tesseract.recognize(
+  imagePath,
+  'eng',
+  // { logger: m => console.log(m) }
+).then(({ data: { text } }) => {
   const logoKeywords = ['logo', 'brand', 'company', 'corporate'];
   const containsLogo = logoKeywords.some(keyword => text.toLowerCase().includes(keyword));
-
   if (containsLogo) {
     console.log('This image may contain a logo. Skipping...');
   } else {
     console.log('This image does not appear to be a logo. Proceed...');
   }
-
-  await worker.terminate();
-})();
+});
