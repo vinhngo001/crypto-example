@@ -1,8 +1,8 @@
-// const fetch = require('node-fetch');
-// const multer = require("multer");
-// const fs = require("fs");
-// const path = require("path");
-// const https = require('https');
+const fetch = require('node-fetch');
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
+const https = require('https');
 // const { createWorker, createScheduler, recognize } = require('tesseract.js');
 // const crypto = require("crypto");
 const tesseract = require('tesseract.js');
@@ -57,6 +57,10 @@ async function performOCR(imagePath) {
 	} catch (error) {
 		console.error('Error performing OCR:', error);
 	}
+}
+
+function isFileOrWebsite(url){
+	
 }
 
 performOCR(imagePath)
