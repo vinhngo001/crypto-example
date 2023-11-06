@@ -34,16 +34,29 @@ const imagePath = './Funny-Minion-Quotes.jpg';
 //     console.log(err);
 // })
 
-tesseract.recognize(
-  imagePath,
-  'eng',
-  // { logger: m => console.log(m) }
-).then(({ data: { text } }) => {
-  const logoKeywords = ['logo', 'brand', 'company', 'corporate'];
-  const containsLogo = logoKeywords.some(keyword => text.toLowerCase().includes(keyword));
-  if (containsLogo) {
-    console.log('This image may contain a logo. Skipping...');
-  } else {
-    console.log('This image does not appear to be a logo. Proceed...');
-  }
-});
+// tesseract.recognize(
+//   imagePath,
+//   'eng',
+//   // { logger: m => console.log(m) }
+// ).then(({ data: { text } }) => {
+//   console.log(text);
+//   const logoKeywords = ['logo', 'brand', 'company', 'corporate'];
+//   const containsLogo = logoKeywords.some(keyword => text.toLowerCase().includes(keyword));
+//   if (containsLogo) {
+//     console.log('This image may contain a logo. Skipping...');
+//   } else {
+//     console.log('This image does not appear to be a logo. Proceed...');
+//   }
+// });
+
+async function performOCR(imagePath) {
+	try {
+		const result = await tesseract.recognize(imagePath, 'eng');
+		const { data: { text } } = result;
+		console.log('OCR Result:', text);
+	} catch (error) {
+		console.error('Error performing OCR:', error);
+	}
+}
+
+performOCR(imagePath)
