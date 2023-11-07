@@ -53,14 +53,46 @@ async function performOCR(imagePath) {
 	try {
 		const result = await tesseract.recognize(imagePath, 'eng');
 		const { data: { text } } = result;
-		console.log('OCR Result:', text);
+		// console.log('OCR Result:', text);
+		return text;
 	} catch (error) {
 		console.error('Error performing OCR:', error);
 	}
 }
 
-function isFileOrWebsite(url){
-	
+// performOCR(imageUrl);
+
+function isImgeOrWebiste(url) {
+	https.request(url, { method: 'HEAD' }, async (response) => {
+		const contentType = response.headers['content-type'];
+		if (contentType) {
+			if (contentType.includes('text/html')) {
+				console.log(`${url} is a website`);
+				return false;
+			} else {
+				console.log(`${url} is a file with content type: ${contentType}`);
+				const contentLength = response.headers['content-length'];
+				if (contentLength) {
+					const fileSizeBytes = parseInt(contentLength);
+					const fileSizeMB = fileSizeBytes / (1024 * 1024);
+					console.log(`File size: ${fileSizeBytes} bytes (${fileSizeMB} MB)`);
+					if (fileSizeMB < 1) {
+						const result = await performOCR(url);
+						console.log({ result })
+						console.log('OCR Result:', result);
+						if (result.length < 50) {
+							console.log("Chu ba bi bo nha nhu");
+							return true;
+						}
+					}
+
+					return false;
+				}
+			}
+		}
+	}).on("error", (error) => {
+		console.error(`Error while checking ${url}: ${error.message}`);
+	}).end();
 }
 
-performOCR(imagePath)
+isImgeOrWebiste(imageUrl)
