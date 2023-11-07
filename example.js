@@ -62,37 +62,80 @@ async function performOCR(imagePath) {
 
 // performOCR(imageUrl);
 
-function isImgeOrWebiste(url) {
-	https.request(url, { method: 'HEAD' }, async (response) => {
-		const contentType = response.headers['content-type'];
-		if (contentType) {
-			if (contentType.includes('text/html')) {
-				console.log(`${url} is a website`);
-				return false;
-			} else {
-				console.log(`${url} is a file with content type: ${contentType}`);
-				const contentLength = response.headers['content-length'];
-				if (contentLength) {
-					const fileSizeBytes = parseInt(contentLength);
-					const fileSizeMB = fileSizeBytes / (1024 * 1024);
-					console.log(`File size: ${fileSizeBytes} bytes (${fileSizeMB} MB)`);
-					if (fileSizeMB < 1) {
-						const result = await performOCR(url);
-						console.log({ result })
-						console.log('OCR Result:', result);
-						if (result.length < 50) {
-							console.log("Chu ba bi bo nha nhu");
-							return true;
-						}
-					}
+async function isImgeOrWebiste(url) {
+	return new Promise(async (resolve, reject) => {
+		try {
+			const response = await new Promise((resolve, reject) => {
+				https.request(url, { method: 'HEAD' }, (response) => {
+					resolve(response);
+				})
+					.on('error', (error) => {
+						reject(error);
+					})
+					.end();
+			});
 
-					return false;
+			const contentType = response.headers['content-type'];
+
+			if (contentType) {
+				if (contentType.includes('text/html')) {
+					console.log(`${url} is a website`);
+					resolve(false);
+				} else {
+					console.log(`${url} is a file with content type: ${contentType}`);
+					const contentLength = response.headers['content-length'];
+
+					if (contentLength) {
+						const fileSizeBytes = parseInt(contentLength);
+						const fileSizeMB = fileSizeBytes / (1024 * 1024);
+						console.log(`File size: ${fileSizeBytes} bytes (${fileSizeMB} MB)`);
+
+						if (fileSizeMB < 1) {
+							const result = await performOCR(url);
+							// console.log('OCR Result:', result);
+
+							if (result.length < 50) {
+								// console.log("Chu ba bi bo nha nhu");
+								resolve(true);
+							}
+						}
+
+						resolve(false);
+					}
 				}
 			}
+		} catch (error) {
+			console.error(`Error while checking ${url}: ${error.message}`);
+			reject(error);
 		}
-	}).on("error", (error) => {
-		console.error(`Error while checking ${url}: ${error.message}`);
-	}).end();
+	});
+}
+async function checkUrl(imageUrl) {
+	try {
+		const isChecked = await isImgeOrWebiste(imageUrl);
+
+		if (!isChecked) {
+			console.log('This url does not appear to be a logo. Proceed...');
+		} else {
+			console.log('This image may contain a logo. Skipping...');
+		}
+	} catch (error) {
+
+	}
 }
 
-isImgeOrWebiste(imageUrl)
+checkUrl(imageUrl)
+
+// (async () => {
+// 	try {
+// 		const isFile = await isImgeOrWebiste('https://example.com');
+
+// 		if (isFile) {
+// 			console.log('This image may contain a logo. Skipping...');
+// 		} else {
+// 			console.log('This url does not appear to be a logo. Proceed...');
+// 		}
+// 	} catch (error) {
+// 		console.error(error);
+// 	}
+// })();
