@@ -5,3 +5,4 @@ package-lock.json
 request.http
 *.csv
 results.json
+*.txt
