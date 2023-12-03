@@ -3,9 +3,9 @@
 
 
 "@babel/code-frame@^7.0.0":
-  "integrity" "sha512-r1IONyb6Ia+jYR2vvIDhdWdlTGhqbBoFqLTQidzZ4kepUFH15ejXvFHxCVbtl7BOXIudsIubf4E81xeA3h3IXA=="
-  "resolved" "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.23.4.tgz"
-  "version" "7.23.4"
+  "integrity" "sha512-CgH3s1a96LipHCmSUmYFPwY7MNx8C3avkq7i4Wl3cfa662ldtUe4VM1TPXX70pfmrlWTb6jLqTYrZyT2ZTJBgA=="
+  "resolved" "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.23.5.tgz"
+  "version" "7.23.5"
   dependencies:
     "@babel/highlight" "^7.23.4"
     "chalk" "^2.4.2"
@@ -55,9 +55,9 @@
   "version" "0.7.34"
 
 "@types/node@*":
-  "integrity" "sha512-nk5wXLAXGBKfrhLB0cyHGbSqopS+nz0BUgZkUQqSHSSgdee0kssp1IAqlQOu333bW+gMNs2QREx7iynm19Abxw=="
-  "resolved" "https://registry.npmjs.org/@types/node/-/node-20.9.3.tgz"
-  "version" "20.9.3"
+  "integrity" "sha512-37MXfxkb0vuIlRKHNxwCkb60PNBpR94u4efQuN4JgIAm66zfCDXGSAFCef9XUWFovX2R1ok6Z7MHhtdVXXkkIw=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-20.10.2.tgz"
+  "version" "20.10.2"
   dependencies:
     "undici-types" "~5.26.4"
 
@@ -942,11 +942,6 @@
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
 
-"fsevents@~2.3.2":
-  "integrity" "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
-  "version" "2.3.3"
-
 "function-bind@^1.1.2":
   "integrity" "sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA=="
   "resolved" "https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz"
@@ -1475,9 +1470,9 @@
     "xtend" "^4.0.0"
 
 "natural@^6.8.1":
-  "integrity" "sha512-epqmIGcPbnmNzZo9/7ePo09V/k2WtfHLTsb7pEo4A/sS5MNyLVYk92RWFBZi3obOnF2mUuzhhDR+L14TBmsl5g=="
-  "resolved" "https://registry.npmjs.org/natural/-/natural-6.8.1.tgz"
-  "version" "6.8.1"
+  "integrity" "sha512-OoM8NIxGz159VTd1FnNmd6UOwBxaiF3CSojzPt8of4VKmyHP33DO5XPGM2krdh8NQjjyJBii38QRvWqOAXRXDQ=="
+  "resolved" "https://registry.npmjs.org/natural/-/natural-6.10.2.tgz"
+  "version" "6.10.2"
   dependencies:
     "afinn-165" "^1.0.2"
     "afinn-165-financialmarketnews" "^3.0.0"
