@@ -29,6 +29,7 @@
         "puppeteer-extra": "^3.2.3",
         "puppeteer-extra-plugin-recaptcha": "^3.5.0",
         "request": "^2.88.2",
+        "robots-parser": "^3.0.1",
         "tesseract.js": "^5.0.3",
         "text-from-image": "^1.1.1"
     },
