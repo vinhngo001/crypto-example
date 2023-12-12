@@ -7,3 +7,4 @@ request.http
 results.json
 *.txt
 crawledData.json
+content
