@@ -1,13 +1,11 @@
 const puppeteer = require("puppeteer-core");
 const fs = require('fs')
 const { parse } = require('himalaya');
-const { cleanData, filterList } = require("./helpers");
+const { cleanData, cleanUpList } = require("./helpers");
 const html = fs.readFileSync('content/contentHtml.txt', { encoding: 'utf-8' });
-// console.log({html});
-// return 
+
 const json = parse(html);
 fs.writeFileSync('content/finalHTML.json', JSON.stringify(json, null, 2));
-// console.log('👉', json);
 
 const textTags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'abbr', 'acronym', 'address', 'bdo', 'blockquote', 'cite', 'q', 'code', 'ins', 'del', 'dfn', 'kbd', 'pre', 'samp', 'var', 'br', 'span'];
 const linkTags = ["a", "base"];
@@ -18,12 +16,12 @@ const scripTags = ["script", "noscript"];
 const formTags = ["form", "input", "textarea", "select", "option", "optgroup", "button", "label", "fieldset", "legend"];
 
 const tagMappings = {
-    textTags: { ...createMapping(textTags, extractTextData) },
-    linkTags: { ...createMapping(linkTags, extractLinkData) },
-    imageTags: { ...createMapping(imageTags, extractImageData)},
+    ...createMapping(textTags, extractTextData),
+    ...createMapping(linkTags, extractLinkData),
+    ...createMapping(imageTags, extractImageData),
     // ...createMapping(formTags, extractFormData),
     // ...createMapping(scripTags, extractFormData),
-    listTags: { ...createMapping(listTags, extractListData), }
+    ...createMapping(listTags, extractListData),
     // tableTags: { ...createMapping(tableTags, extractContentData) }
 }
 
@@ -92,15 +90,12 @@ async function extractFormData(page, element) {
 
 async function extractLinkData(page, element) {
     const href = await page.evaluate(el => el.href, element);
-    // return { [tagName.toLowerCase()]: href };
     return href;
 }
 
 async function extractImageData(page, element) {
-    // const tagName = await page.evaluate(el => el.tagName, element);
     const src = await page.evaluate(el => el.src, element);
     return src;
-    // return { [tagName.toLowerCase()]: src };
 }
 
 function createMapping(tags, extractionFunction) {
@@ -112,29 +107,32 @@ function createMapping(tags, extractionFunction) {
 }
 
 async function executeMapping(page, element) {
-    if (element) {
-        const tagName = await page.evaluate(el => el.tagName.toLowerCase(), element);
-        let result = {};
+    try {
+        if (element) {
+            // console.log("Proccessing element");
 
-        for (const key in tagMappings) {
-            result[key] = result[key] || []; // Initialize an empty array if the key doesn't exist
-            const extractionFunction = tagMappings[key][tagName];
+            const tagName = await page.evaluate(el => el.tagName.toLowerCase(), element);
+            console.log(`Tag name: ${tagName}`);
 
+            const extractionFunction = tagMappings[tagName];
             if (extractionFunction) {
                 const extractedData = await extractionFunction(page, element);
                 const cleanedData = cleanData(extractedData);
-                if (typeof cleanedData === 'string' && cleanedData.length !== 0) {
-                    result[key] = result[key].concat(cleanedData);
+                if (cleanedData.length !== 0) {
+                    return cleanedData;
                 }
+            } else {
+                console.log(`No mapping function found for tagName: ${tagName}`);
             }
         }
-        return result;
-    }
 
-    return null;
+        return null;
+    } catch (error) {
+        throw error;
+    }
 }
 
-async function main(contentHtml) {
+async function mapData(contentHtml) {
     const browser = await puppeteer.launch({
         args: ['--no-sandbox',],
         headless: true,
@@ -157,18 +155,9 @@ async function main(contentHtml) {
 
         // Log the results
         // console.log('All Elements:', elementData);
+        const uniqueData = cleanUpList([...new Set(elementData.filter(el => el !== null))])
 
-        const tagTypes = [
-            "textTags", "linkTags", "imageTags", "listTags", "tableTags", "scripTags", "formTags"
-        ];
-
-        const newList = tagTypes.reduce((acc, type) => {
-            const uniqueData = [...new Set(elementData.filter(item => item[type] && item[type].length > 0).map(item => item[type]).flat())];
-            acc.push({ [type]: uniqueData });
-            return acc;
-        }, []);
-
-        fs.writeFileSync('content/initialHTML.json', JSON.stringify(newList, null, 2));
+        fs.writeFileSync('content/initialHTML.json', JSON.stringify(uniqueData, null, 2));
         return await browser.close();
     } catch (error) {
         console.log(error);
@@ -178,36 +167,4 @@ async function main(contentHtml) {
     }
 }
 
-main(html);
-
-function mapData(element) {
-    // if (element.type === 'element' && element.tagName === 'a') {
-    //     // Extract href and text content from anchor element
-    //     const href = element.attributes.find(attr => attr.key === 'href')?.value || '';
-    //     const textContent = element.children.map(mapData).join('').trim();
-
-    //     // Return an object with href and text properties
-    //     return { href, text: textContent };
-    // }
-
-    // Check if the element has text content
-    if (element.type === 'text' && element.content.trim() !== '') {
-        return element.content.trim();
-    }
-
-    // Check if the element has children
-    if (element.children && element.children.length > 0) {
-        const mappedChildren = element.children.map(mapData);
-
-        // Join the results if there is text content
-        const textContent = mappedChildren.join('').trim();
-        if (textContent !== '') {
-            return textContent;
-        }
-    }
-
-    return '';
-}
-
-// const result = mapData(json[0]);
-// console.log({result})
+mapData(html);
