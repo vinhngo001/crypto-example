@@ -16,12 +16,12 @@ const scripTags = ["script", "noscript"];
 const formTags = ["form", "input", "textarea", "select", "option", "optgroup", "button", "label", "fieldset", "legend"];
 
 const tagMappings = {
-    ...createMapping(textTags, extractTextData),
+    // ...createMapping(textTags, extractTextData),
     ...createMapping(linkTags, extractLinkData),
-    ...createMapping(imageTags, extractImageData),
+    // ...createMapping(imageTags, extractImageData),
     // ...createMapping(formTags, extractFormData),
     // ...createMapping(scripTags, extractFormData),
-    ...createMapping(listTags, extractListData),
+    // ...createMapping(listTags, extractListData),
     // tableTags: { ...createMapping(tableTags, extractContentData) }
 }
 
@@ -89,8 +89,12 @@ async function extractFormData(page, element) {
 }
 
 async function extractLinkData(page, element) {
+    // const href = await page.evaluate(el => el.href, element);
+    // return href;
     const href = await page.evaluate(el => el.href, element);
-    return href;
+    const textContent = await page.evaluate(el => el.innerText.trim(), element);
+
+    return { textContent, link: href };
 }
 
 async function extractImageData(page, element) {

@@ -1,25 +1,22 @@
-function cleanData(input) {
-    const typeOfInput = typeof input;
+function cleanData(inputData) {
+    const typeOfInput = typeof inputData;
     switch (typeOfInput) {
         case 'object':
-            const cleanedObject = {};
-            for (const key in input) {
-                if (typeof input[key] === 'string') {
-                    cleanedObject[key] = cleanData(input[key]);
-                } else {
-                    cleanedObject[key] = input[key];
-                }
+            if (Array.isArray(inputData)) {
+                // If inputData is already an array, use it directly
+                return inputData.join('');
+            } else {
+                // If inputData is an object, concatenate its values
+                return Object.values(inputData).join('');
             }
-            return cleanedObject;
         case 'string':
             // For string input
-            return input.trim().replace(/\s+/g, ' ').replace(/\n/g, '');
+            return inputData.trim().replace(/\s+/g, ' ').replace(/\n/g, '');
         default:
-            return input;
+            return inputData;
     }
 }
 function filterListRecursive(inputList, currentIndex = 0, currentResult = '') {
-    let results = [];
     if (currentIndex === inputList.length) {
         return currentResult ? [currentResult] : [];
     }
