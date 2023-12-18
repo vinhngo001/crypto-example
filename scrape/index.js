@@ -1,9 +1,10 @@
 const puppeteer = require("puppeteer-core");
 const fs = require('fs')
 const { parse } = require('himalaya');
-const { cleanData, cleanUpList } = require("./helpers");
+const { cleanData, cleanUpList } = require("../helpers");
 const html = fs.readFileSync('content/contentHtml.txt', { encoding: 'utf-8' });
-
+const AWS = require("aws-sdk");
+const getEnv= require("../env");
 const json = parse(html);
 fs.writeFileSync('content/finalHTML.json', JSON.stringify(json, null, 2));
 
@@ -14,6 +15,18 @@ const listTags = ["ul", "ol", "li", "dl", "dt", "dd"];
 const tableTags = ["table", "tr", "td", "th", "tbody", "thead", "tfoot", "col", "colgroup", "caption"];
 const scripTags = ["script", "noscript"];
 const formTags = ["form", "input", "textarea", "select", "option", "optgroup", "button", "label", "fieldset", "legend"];
+
+const s3 = AWS.S3();
+
+async function getContentFromS3Link(bucketName, objectKey){
+    try {
+        const params = {
+            
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 const tagMappings = {
     // ...createMapping(textTags, extractTextData),

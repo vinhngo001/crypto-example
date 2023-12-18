@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer-core");
 const fs = require('fs')
 const { parse } = require('himalaya');
-const { cleanData, filterList } = require("./helpers");
+const { cleanData, filterList } = require("../helpers");
 const html = fs.readFileSync('content/contentHtml.txt', { encoding: 'utf-8' });
 // console.log({html});
 // return 
