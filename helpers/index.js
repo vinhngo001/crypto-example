@@ -7,7 +7,7 @@ function cleanData(inputData) {
                 return inputData.join('');
             } else {
                 // If inputData is an object, concatenate its values
-                return Object.values(inputData).join('');
+                return Object.values(inputData).join(', ');
             }
         case 'string':
             // For string input

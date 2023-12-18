@@ -2,11 +2,11 @@ const puppeteer = require("puppeteer-core");
 const fs = require('fs')
 const { parse } = require('himalaya');
 const { cleanData, cleanUpList } = require("../helpers");
-const html = fs.readFileSync('content/contentHtml.txt', { encoding: 'utf-8' });
-const AWS = require("aws-sdk");
-const getEnv= require("../env");
-const json = parse(html);
-fs.writeFileSync('content/finalHTML.json', JSON.stringify(json, null, 2));
+const utils = require("../utils");
+// const html = fs.readFileSync('../content/contentHtml.txt', { encoding: 'utf-8' });
+
+// const json = parse(html);
+// fs.writeFileSync('content/finalHTML.json', JSON.stringify(json, null, 2));
 
 const textTags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'abbr', 'acronym', 'address', 'bdo', 'blockquote', 'cite', 'q', 'code', 'ins', 'del', 'dfn', 'kbd', 'pre', 'samp', 'var', 'br', 'span'];
 const linkTags = ["a", "base"];
@@ -16,22 +16,10 @@ const tableTags = ["table", "tr", "td", "th", "tbody", "thead", "tfoot", "col", 
 const scripTags = ["script", "noscript"];
 const formTags = ["form", "input", "textarea", "select", "option", "optgroup", "button", "label", "fieldset", "legend"];
 
-const s3 = AWS.S3();
-
-async function getContentFromS3Link(bucketName, objectKey){
-    try {
-        const params = {
-            
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 const tagMappings = {
-    // ...createMapping(textTags, extractTextData),
+    ...createMapping(textTags, extractTextData),
     ...createMapping(linkTags, extractLinkData),
-    // ...createMapping(imageTags, extractImageData),
+    ...createMapping(imageTags, extractImageData),
     // ...createMapping(formTags, extractFormData),
     // ...createMapping(scripTags, extractFormData),
     // ...createMapping(listTags, extractListData),
@@ -157,10 +145,12 @@ async function mapData(contentHtml) {
         executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' //local
     });
     try {
+        let html = await utils.getContentFromS3Link('contentFiles/contentHtml-fda-1701823597486.txt');
+        // fs.writeFileSync('../content/contentHtml.txt', JSON.stringify(html., null, 2));
         const page = await browser.newPage();
         // await page.goto("https://www.pdr.net/browse-by-drug-name?search=Aspirin", { waitUntil: ['networkidle2', 'domcontentloaded'], timeout: 20000 });
 
-        await page.setContent(contentHtml, { waitUntil: ['networkidle2', 'domcontentloaded'], timeout: 20000 });
+        await page.setContent(html, { waitUntil: ['networkidle2', 'domcontentloaded'], timeout: 20000 });
 
         // Get all elements in the body
         const allElements = await page.$$('body *');
@@ -174,7 +164,8 @@ async function mapData(contentHtml) {
         // console.log('All Elements:', elementData);
         const uniqueData = cleanUpList([...new Set(elementData.filter(el => el !== null))])
 
-        fs.writeFileSync('content/initialHTML.json', JSON.stringify(uniqueData, null, 2));
+        fs.writeFileSync('./content/initialHTML.json', JSON.stringify(uniqueData, null, 2));
+
         return await browser.close();
     } catch (error) {
         console.log(error);
@@ -184,4 +175,4 @@ async function mapData(contentHtml) {
     }
 }
 
-mapData(html);
+mapData();
