@@ -106,7 +106,7 @@ const main = async () => {
     }
 }
 
-main();
+// main();
 
 module.exports = {
     getContentFromS3Link

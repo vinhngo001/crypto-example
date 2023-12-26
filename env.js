@@ -25,4 +25,12 @@ exports.getAWSConfig = () => {
     }
 }
 
+
+exports.getRabbitMQUrl = () => {
+    const RABBITMQ_URL = getEnv('RABBITMQ_URL');
+    if (!RABBITMQ_URL) {
+        throw new Error(`RabbitMQ url is undefined.`);
+    }
+    return RABBITMQ_URL;
+}
 // module.exports = getEnv;

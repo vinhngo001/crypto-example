@@ -23,7 +23,7 @@ const tagMappings = {
     // ...createMapping(formTags, extractFormData),
     // ...createMapping(scripTags, extractFormData),
     // ...createMapping(listTags, extractListData),
-    // tableTags: { ...createMapping(tableTags, extractContentData) }
+    ...createMapping(tableTags, extractContentData)
 }
 
 async function extractTableData(page, element) {
@@ -145,7 +145,7 @@ async function mapData(contentHtml) {
         executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' //local
     });
     try {
-        let html = await utils.getContentFromS3Link('contentFiles/contentHtml-fda-1701823597486.txt');
+        let html = await utils.getContentFromS3Link('contentFiles/contentHtml-fda-1701829860395.txt');
         // fs.writeFileSync('../content/contentHtml.txt', JSON.stringify(html., null, 2));
         const page = await browser.newPage();
         // await page.goto("https://www.pdr.net/browse-by-drug-name?search=Aspirin", { waitUntil: ['networkidle2', 'domcontentloaded'], timeout: 20000 });
