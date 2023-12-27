@@ -2,6 +2,7 @@ require("dotenv").config();
 const AWS = require("aws-sdk");
 const { getAWSConfig } = require("../env");
 const fs = require("fs");
+const path = require("path");
 
 // Config AWS SDK
 // AWS.config.update({
@@ -54,6 +55,7 @@ async function getContentFromS3Link(objectKey) {
 
         // Assuming the content is stored in UTF-8 encoding
         const content = data.Body.toString('utf-8');
+        console.log({content})
         return content;
     } catch (error) {
         console.log(error);
@@ -89,11 +91,56 @@ async function getObjectContent(objectKey) {
     }
 }
 
+async function downloadAllFiles() {
+    try {
+        // const { S3_BUCKET } = getAWSConfig();
+        // const s3 = initializeAWS();
+        const s3 = new AWS.S3();
+        let continuationToken = null;
+        let allObjects = [];
+
+        const params = { Bucket: "lizai-upload", ContinuationToken: continuationToken }
+        // console.log(objects.Contents[0]);
+        // console.log(objects.Contents[1]);
+        const localDirectory = "./content";
+        // do {
+        //     const objects = await s3.listObjectsV2(params).promise();
+
+        //     allObjects = allObjects.concat(objects.Contents);
+        //     continuationToken = objects.NextContinuationToken;
+        // } while (continuationToken);
+
+        // console.log(">>>>>>>", allObjects.length);
+        const objects = await s3.listObjectsV2(params).promise();
+        for (const obj of objects.Contents) {
+            const objectKey = obj.Key;
+            // console.log({ objectKey });
+            const strArr = objectKey.split("/")[1].split("-");
+            const isContentHtml = strArr[0] === "contentHtml" ? true : false;
+            // console.log(">>>>>>", strArr[0])
+            if (!isContentHtml) {
+                const localFilePath = path.join(localDirectory, objectKey);
+                console.log({ localFilePath });
+                // fs.mkdirSync(path.dirname(localFilePath), {recursive: true});
+                const content = await getObjectContent(objectKey);
+                // const data = await s3.getObject({ Bucket: S3_BUCKET, Key: key });
+                console.log({ content });
+                // fs.writeFileSync(localFilePath, JSON.stringify(content, null, 2));
+                console.log(`Downloaded: ${objectKey}`);
+            }
+        }
+        return;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 const main = async () => {
     try {
         const objectKeys = await listS3Objects();
         for (const objectKey of objectKeys) {
-            const strArr = objectKey.split('/');
+            // const strArr = objectKey.split('/');
             // if(strArr[1].split('-')[0] === "contentHtml"){
             //     console.log(`Link: ${objectKey}`);
             // }
@@ -107,8 +154,9 @@ const main = async () => {
 }
 
 // main();
-
+// downloadAllFiles();
 module.exports = {
-    getContentFromS3Link
+    getContentFromS3Link,
+    downloadAllFiles
 }
-// getContentFromS3Link("contentFiles/contentHtml-fda-1701783342706.txt");
+getContentFromS3Link("contentFiles/contentHtml-fda-1702365545256.txt");
