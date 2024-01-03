@@ -22,7 +22,7 @@ const tagMappings = {
     ...createMapping(imageTags, extractImageData),
     // ...createMapping(formTags, extractFormData),
     // ...createMapping(scripTags, extractFormData),
-    // ...createMapping(listTags, extractListData),
+    ...createMapping(listTags, extractListData),
     ...createMapping(tableTags, extractContentData)
 }
 
