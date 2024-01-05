@@ -106,4 +106,4 @@ async function compareHtmlConstructor(url1, url2) {
     }
 }
 
-compareHtmlConstructor('https://github.com/conanak99', 'https://github.com/codergogoi')
+compareHtmlConstructor('https://github.com/conanak99', 'https://replit.com/');
