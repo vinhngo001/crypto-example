@@ -68,9 +68,8 @@ async function getHtml(url) {
     try {
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: ['networkidle2', 'domcontentloaded'], timeout: 20000 });
-        // const html = await page.content();
-        // const $1 = await page.setContent(html);
         const contentHtml = new Set(await page.$$eval('*', elements => elements.map(element => element.tagName.toLowerCase())));
+        // console.log(contentHtml)
         await browser.close();
         return contentHtml;
     } catch (error) {
@@ -106,4 +105,6 @@ async function compareHtmlConstructor(url1, url2) {
     }
 }
 
-compareHtmlConstructor('https://github.com/conanak99', 'https://replit.com/');
+compareHtmlConstructor('https://github.com', 'https://github.com/');
+
+// getHtml()
